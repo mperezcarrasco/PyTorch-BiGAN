@@ -38,7 +38,7 @@ class Discriminator(nn.Module):
 
     def inf_z(self, z):
         z = F.dropout2d(F.leaky_relu(self.conv1z(z), negative_slope=0.1), 0.2)
-        z = F.dropout2d(F.leaky_relu(self.conv1z(z), negative_slope=0.1), 0.2)
+        z = F.dropout2d(F.leaky_relu(self.conv2z(z), negative_slope=0.1), 0.2)
         return z
 
     def inf_xz(self, xz):
@@ -51,9 +51,9 @@ class Discriminator(nn.Module):
         z = self.inf_z(z)
         xz = torch.cat((x,z), dim=1)
         out = self.inf_xz(xz)
-        if self.was:
+        if self.wass:
             return out
-        else: 
+        else:
             return torch.sigmoid(out)
 
 
@@ -61,7 +61,7 @@ class Generator(nn.Module):
     def __init__(self, z_dim=32):
         super(Generator, self).__init__()
         self.z_dim = z_dim
-        
+
         self.output_bias = nn.Parameter(torch.zeros(3, 32, 32), requires_grad=True)
         self.deconv1 = nn.ConvTranspose2d(z_dim, 256, 4, stride=1, bias=False)
         self.bn1 = nn.BatchNorm2d(256)
@@ -69,12 +69,12 @@ class Generator(nn.Module):
         self.bn2 = nn.BatchNorm2d(128)
         self.deconv3 = nn.ConvTranspose2d(128, 64, 4, stride=1, bias=False)
         self.bn3 = nn.BatchNorm2d(64)
-        self.deconv4 = nn.ConvTranspose2d(32, 32, 5, stride=1, bias=False)
+        self.deconv4 = nn.ConvTranspose2d(64, 32, 4, stride=2, bias=False)
         self.bn4 = nn.BatchNorm2d(32)
-        self.deconv5 = nn.ConvTranspose2d(64, 32, 4, stride=2, bias=False)
+        self.deconv5 = nn.ConvTranspose2d(32, 32, 5, stride=1, bias=False)
         self.bn5 = nn.BatchNorm2d(32)
         self.deconv6 = nn.Conv2d(32, 3, 1, stride=1, bias=True)
-   
+
     def forward(self, z):
         z = F.leaky_relu(self.bn1(self.deconv1(z)), negative_slope=0.1)
         z = F.leaky_relu(self.bn2(self.deconv2(z)), negative_slope=0.1)
@@ -97,11 +97,11 @@ class Encoder(nn.Module):
         self.conv4 = nn.Conv2d(128, 256, 4, stride=2, bias=False)
         self.bn4 = nn.BatchNorm2d(256)
         self.conv5 = nn.Conv2d(256, 512, 4, stride=1, bias=False)
-        self.bn5 = nn.BatchNorm2d(512) 
+        self.bn5 = nn.BatchNorm2d(512)
         self.conv6 = nn.Conv2d(512, 512, 1, stride=1, bias=False)
-        self.bn6 = nn.BatchNorm2d(512) 
+        self.bn6 = nn.BatchNorm2d(512)
         self.bn7 = nn.Conv2d(512, z_dim*2, 1, stride=1, bias=True)
-    
+
     def reparameterize(self, z):
         z = z.view(z.size(0), -1)
         mu, log_sigma = z[:, :self.z_dim], z[:, self.z_dim:]

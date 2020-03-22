@@ -1,5 +1,7 @@
 import torch
+import torch.nn as nn
 from torch import optim
+from torch.autograd import Variable
 import torch.nn.functional as F
 import torchvision.utils as vutils
 
@@ -15,25 +17,25 @@ class TrainerBiGAN:
         self.args = args
         self.train_loader = data
         self.device = device
-    
+
 
     def train(self):
         """Training the BiGAN"""
         self.G = Generator(self.args.latent_dim).to(self.device)
         self.E = Encoder(self.args.latent_dim).to(self.device)
         self.D = Discriminator(self.args.latent_dim, self.args.wasserstein).to(self.device)
-        
+
         self.G.apply(weights_init_normal)
         self.E.apply(weights_init_normal)
         self.D.apply(weights_init_normal)
-        
-        if args.wasserstein:
-            optimizer_ge = optim.RMSprop(list(self.G.parameters()) + 
-                                      list(self.E.parameters()),, lr=self.args.lr_rmsprop)
+
+        if self.args.wasserstein:
+            optimizer_ge = optim.RMSprop(list(self.G.parameters()) +
+                                      list(self.E.parameters()), lr=self.args.lr_rmsprop)
             optimizer_d = optim.RMSprop(self.D.parameters(), lr=self.args.lr_rmsprop)
         else:
-            optimizer_ge = optim.Adam(list(self.G.parameters()) + 
-                                      list(self.E.parameters()),, lr=self.args.lr_adam)
+            optimizer_ge = optim.Adam(list(self.G.parameters()) +
+                                      list(self.E.parameters()), lr=self.args.lr_adam)
             optimizer_d = optim.Adam(self.D.parameters(), lr=self.args.lr_adam)
 
         fixed_z = Variable(torch.randn((10, self.args.latent_dim, 1, 1)),
@@ -48,9 +50,9 @@ class TrainerBiGAN:
                 y_fake = Variable(torch.zeros((x.size(0), 1)).to(self.device))
 
                 #Noise for improving training.
-                noise1 = Variable(torch.Tensor(x.size()).normal_(0, 0.1 * (num_epochs - epoch) / num_epochs),
+                noise1 = Variable(torch.Tensor(x.size()).normal_(0, 0.1 * (self.args.num_epochs - epoch) / self.args.num_epochs),
                                   requires_grad=False).to(self.device)
-                noise2 = Variable(torch.Tensor(x.size()).normal_(0, 0.1 * (num_epochs - epoch) / num_epochs),
+                noise2 = Variable(torch.Tensor(x.size()).normal_(0, 0.1 * (self.args.num_epochs - epoch) / self.args.num_epochs),
                                   requires_grad=False).to(self.device)
 
                 #Cleaning gradients.
@@ -65,7 +67,7 @@ class TrainerBiGAN:
                 #Encoder:
                 x_true = x.float().to(self.device)
                 z_true = self.E(x_true)
-                
+
                 #Discriminator
                 out_true = self.D(x_true + noise1, z_true)
                 out_fake = self.D(x_fake + noise2, z_fake)
@@ -79,7 +81,7 @@ class TrainerBiGAN:
                     loss_ge = criterion(out_fake, y_true) + criterion(out_true, y_fake)
 
                 #Computing gradients and backpropagate.
-                loss_d.backward(retain_variables=True)
+                loss_d.backward(retain_graph=True)
                 optimizer_d.step()
 
                 loss_ge.backward()
