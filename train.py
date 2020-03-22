@@ -42,7 +42,7 @@ class TrainerBiGAN:
                            requires_grad=False).to(self.device)
         criterion = nn.BCELoss()
         for epoch in range(self.args.num_epochs):
-            g_losses = 0
+            ge_losses = 0
             d_losses = 0
             for x, _ in Bar(self.train_loader):
                 #Defining labels
@@ -91,12 +91,15 @@ class TrainerBiGAN:
                 if self.args.wasserstein:
                     for p in self.D.parameters():
                         p.data.clamp_(-self.args.clamp, self.args.clamp)
+                
+                ge_losses += loss_ge.item()
+                d_losses += loss_d.item()
 
             if epoch % 50 == 0:
                 vutils.save_image(self.G(fixed_z).data, './images/{}_fake.png'.format(epoch))
 
             print("Training... Epoch: {}, Discrimiantor Loss: {:.3f}, Generator Loss: {:.3f}".format(
-                epoch, d_losses/len(self.train_loader), g_losses/len(self.train_loader)
+                epoch, d_losses/len(self.train_loader), ge_losses/len(self.train_loader)
             ))
                 
 
