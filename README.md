@@ -6,8 +6,8 @@ This is my Minimal Pytorch implementation of [Adversarially Learned Inference](h
 # Results
 
 Epoch 0:
-![](images/fake_0.jpg)
+![0](/images/fake_0.jpg)
 
 Epoch 100:
-![](images/fake_100.jpg)
+![100](/images/fake_100.jpg)
 
