@@ -17,4 +17,8 @@ Epoch 300:
 
 <img src="./images/300_fake.png" width="700">
 
+Epoch 450:
+
+<img src="./images/450_fake.png" width="700">
+
 
