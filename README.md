@@ -15,6 +15,6 @@ Epoch 100:
 
 Epoch 200:
 
-<img src="./images/200_fake.png" width="700">
+<img src="./images/300_fake.png" width="700">
 
 
