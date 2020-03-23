@@ -26,7 +26,7 @@ class Discriminator(nn.Module):
         # Joint inference
         self.conv1xz = nn.Conv2d(1024, 1024, 1, stride=1, bias=False)
         self.conv2xz = nn.Conv2d(1024, 1024, 1, stride=1, bias=False)
-        self.conv3xz = nn.Conv2d(1024, 1, 1, stride=1, bias=True)
+        self.conv3xz = nn.Conv2d(1024, 1, 1, stride=1, bias=False)
 
     def inf_x(self, x):
         x = F.dropout2d(F.leaky_relu(self.conv1x(x), negative_slope=0.1), 0.2)
