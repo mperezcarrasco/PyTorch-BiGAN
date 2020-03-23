@@ -41,7 +41,7 @@ class TrainerBiGAN:
         fixed_z = Variable(torch.randn((16, self.args.latent_dim, 1, 1)),
                            requires_grad=False).to(self.device)
         criterion = nn.BCELoss()
-        for epoch in range(self.args.num_epochs):
+        for epoch in range(self.args.num_epochs+1):
             ge_losses = 0
             d_losses = 0
             for x, _ in Bar(self.train_loader):
