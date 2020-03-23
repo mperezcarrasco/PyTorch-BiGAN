@@ -7,14 +7,18 @@ This is my Minimal Pytorch implementation of [Adversarially Learned Inference](h
 
 Epoch 0:
 
-<img src="./images/0_fake.png" width="700">
+<img src="./images/0_fake.png" width="500">
 
 Epoch 100:
 
-<img src="./images/100_fake.png" width="700">
+<img src="./images/100_fake.png" width="500">
 
-Epoch 200:
+Epoch 300:
 
-<img src="./images/200_fake.png" width="700">
+<img src="./images/300_fake.png" width="500">
+
+Epoch 450:
+
+<img src="./images/450_fake.png" width="500">
 
 
