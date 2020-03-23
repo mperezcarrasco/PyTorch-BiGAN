@@ -7,9 +7,9 @@ This is my Minimal Pytorch implementation of [Adversarially Learned Inference](h
 
 Epoch 0:
 
-![0](./images/0_fake.png =250x)
+![](./images/0_fake.png) { width: 200px; }
 
 Epoch 100:
 
-![100](./images/100_fake.png =250x)
+![](./images/100_fake.png) { width: 200px; }
 
