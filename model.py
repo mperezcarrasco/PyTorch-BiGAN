@@ -81,7 +81,7 @@ class Generator(nn.Module):
         z = F.leaky_relu(self.bn3(self.deconv3(z)), negative_slope=0.1)
         z = F.leaky_relu(self.bn4(self.deconv4(z)), negative_slope=0.1)
         z = F.leaky_relu(self.bn5(self.deconv5(z)), negative_slope=0.1)
-        return torch.tanh(self.deconv6(z) + self.output_bias)
+        return torch.sigmoid(self.deconv6(z) + self.output_bias)
 
 
 class Encoder(nn.Module):

@@ -38,7 +38,7 @@ class TrainerBiGAN:
                                       list(self.E.parameters()), lr=self.args.lr_adam)
             optimizer_d = optim.Adam(self.D.parameters(), lr=self.args.lr_adam)
 
-        fixed_z = Variable(torch.randn((10, self.args.latent_dim, 1, 1)),
+        fixed_z = Variable(torch.randn((16, self.args.latent_dim, 1, 1)),
                            requires_grad=False).to(self.device)
         criterion = nn.BCELoss()
         for epoch in range(self.args.num_epochs):

@@ -6,10 +6,9 @@ import torchvision.transforms as transforms
 
 
 def get_cifar10(args, data_dir='./data/cifar/'):
-    # Normalizing data in range [-1, 1] 
+    """Returning cifar dataloder.""""
     transform = transforms.Compose([transforms.Resize(32), #3x32x32 images.
-                                    transforms.ToTensor(),
-                                    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+                                    transforms.ToTensor()])
     data = datasets.CIFAR10(root=data_dir, train=True, download=True, transform=transform)
     dataloader = DataLoader(data, batch_size=args.batch_size, shuffle=True)
     return dataloader
