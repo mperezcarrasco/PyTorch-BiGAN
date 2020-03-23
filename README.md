@@ -13,4 +13,8 @@ Epoch 100:
 
 <img src="./images/100_fake.png" width="700">
 
+Epoch 200:
+
+<img src="./images/200_fake.png" width="700">
+
 
