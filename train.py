@@ -31,7 +31,7 @@ class TrainerBiGAN:
 
         if self.args.wasserstein:
             optimizer_ge = optim.RMSprop(list(self.G.parameters()) +
-                                      list(self.E.parameters()), lr=self.args.lr_rmsprop)
+                                         list(self.E.parameters()), lr=self.args.lr_rmsprop)
             optimizer_d = optim.RMSprop(self.D.parameters(), lr=self.args.lr_rmsprop)
         else:
             optimizer_ge = optim.Adam(list(self.G.parameters()) +
@@ -50,9 +50,11 @@ class TrainerBiGAN:
                 y_fake = Variable(torch.zeros((x.size(0), 1)).to(self.device))
 
                 #Noise for improving training.
-                noise1 = Variable(torch.Tensor(x.size()).normal_(0, 0.1 * (self.args.num_epochs - epoch) / self.args.num_epochs),
+                noise1 = Variable(torch.Tensor(x.size()).normal_(0, 
+                                  0.1 * (self.args.num_epochs - epoch) / self.args.num_epochs),
                                   requires_grad=False).to(self.device)
-                noise2 = Variable(torch.Tensor(x.size()).normal_(0, 0.1 * (self.args.num_epochs - epoch) / self.args.num_epochs),
+                noise2 = Variable(torch.Tensor(x.size()).normal_(0, 
+                                  0.1 * (self.args.num_epochs - epoch) / self.args.num_epochs),
                                   requires_grad=False).to(self.device)
 
                 #Cleaning gradients.
@@ -95,8 +97,8 @@ class TrainerBiGAN:
                 ge_losses += loss_ge.item()
                 d_losses += loss_d.item()
 
-            if epoch % 10 == 0:
-                vutils.save_image((self.G(fixed_z).data+1)/2., './images/{}_fake.png'.format(epoch))
+            if epoch % 50 == 0:
+                vutils.save_image(self.G(fixed_z).data, './images/{}_fake.png'.format(epoch))
 
             print("Training... Epoch: {}, Discrimiantor Loss: {:.3f}, Generator Loss: {:.3f}".format(
                 epoch, d_losses/len(self.train_loader), ge_losses/len(self.train_loader)
