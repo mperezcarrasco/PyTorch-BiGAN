@@ -95,8 +95,8 @@ class TrainerBiGAN:
                 ge_losses += loss_ge.item()
                 d_losses += loss_d.item()
 
-            if epoch % 50 == 0:
-                vutils.save_image(self.G(fixed_z).data, './images/{}_fake.png'.format(epoch))
+            if epoch % 10 == 0:
+                vutils.save_image((self.G(fixed_z).data+1)/2., './images/{}_fake.png'.format(epoch))
 
             print("Training... Epoch: {}, Discrimiantor Loss: {:.3f}, Generator Loss: {:.3f}".format(
                 epoch, d_losses/len(self.train_loader), ge_losses/len(self.train_loader)
